@@ -4,7 +4,7 @@
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
 }
 .tg-box {
-  position: relative; height: clamp(320px, 46vw, 460px); touch-action: pan-y;
+  position: relative; height: clamp(300px, 40vw, 420px); touch-action: pan-y;
   user-select: none; -webkit-user-select: none;
 }
 .tg-box svg { display: block; }
@@ -36,15 +36,30 @@
 .tg-tools button:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 2px; }
 
 .tg-info {
-  margin: 0 14px; padding: 12px 16px; border-radius: 12px; min-height: 64px;
+  margin: 0 12px; padding: 8px 14px; border-radius: 10px; min-height: 52px;
   background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex; flex-direction: column; justify-content: center; gap: 2px; font-size: 0.9rem; color: var(--muted);
 }
 .tg-info strong { color: #fff; font-size: 1rem; }
 .tg-info.origin { border-color: rgba(79, 174, 122, 0.5); }
 .tg-info.program { border-color: rgba(214, 178, 106, 0.55); }
-.tg-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 12px 16px 16px; font-size: 0.8rem; color: var(--muted); }
+.tg-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 8px 14px 12px; font-size: 0.75rem; color: var(--muted); }
 .tg-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
 .tg-legend i.origin { background: #3f9466; }
 .tg-legend i.program { background: #c9a24e; }
 .tg-legend i.night { background: #0b1226; border: 1px solid rgba(255, 255, 255, 0.25); }
+
+/* a teacher studying now: a small pulsing green dot at their city */
+.tg-learner {
+  position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; display: grid; place-items: center; cursor: pointer; z-index: 2;
+}
+.tg-learner:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 2px; }
+.tg-learner-dot { width: 10px; height: 10px; border-radius: 50%; background: #4ade80; border: 2px solid #eafff1; animation: tg-ping 2.4s ease-out infinite; }
+@keyframes tg-ping { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); } 80%, 100% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); } }
+/* the mini app, pinned above the dot */
+.tg-pop { position: absolute; z-index: 3; transform: translate(-50%, calc(-100% - 16px)); }
+.tg-pop.below { transform: translate(-50%, 16px); }
+.tg-pop .gp::after { left: calc(50% + var(--tail, 0px)); }
+.tg-legend i.learner { background: #4ade80; border-radius: 50%; }
+@media (prefers-reduced-motion: reduce) { .tg-learner-dot { animation: none; } }

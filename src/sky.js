@@ -51,28 +51,23 @@ export function skyAt(minutes) {
   }
 }
 
-export function phaseName(minutes) {
-  if (minutes < 270 || minutes >= 1170) return 'night'
-  if (minutes < 330) return 'before dawn'
-  if (minutes < 400) return 'dawn'
-  if (minutes < 1040) return 'day'
-  return 'dusk'
-}
-
-export function formatClock(minutes) {
-  const h = String(Math.floor(minutes / 60)).padStart(2, '0')
-  const m = String(minutes % 60).padStart(2, '0')
-  return `${h}:${m}`
-}
-
 // Fixed star field (seeded, so it never jumps between renders).
 export const STARS = (() => {
   let s = 7
   const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647)
-  return Array.from({ length: 140 }, () => ({
-    x: rnd() * 100,
-    y: Math.pow(rnd(), 1.4) * 78, // denser towards the top
-    r: rnd() < 0.08 ? 1.3 : 0.45 + rnd() * 0.55,
-    o: 0.35 + rnd() * 0.65,
-  }))
+  return Array.from({ length: 140 }, (_, i) => {
+    const bright = rnd() < 0.08
+    return {
+      x: rnd() * 100,
+      y: Math.pow(rnd(), 1.4) * 78, // denser towards the top
+      r: bright ? 1.3 : 0.45 + rnd() * 0.55,
+      o: 0.35 + rnd() * 0.65,
+      // about a third shimmer, slowly (5–11 s), each on its own beat
+      shimmer: bright || rnd() < 0.3,
+      dur: 5 + rnd() * 6,
+      delay: -rnd() * 11,
+      // a soft four-point glint on a few of the bright ones
+      glint: bright && i % 2 === 0,
+    }
+  })
 })()

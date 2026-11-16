@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import Hero from './Hero'
 import {
   education, experience, languages, partnerships, profile, projects, skills, smallBuilds,
@@ -6,7 +6,8 @@ import {
 
 const JisrQuiz = lazy(() => import('./demos/JisrQuiz'))
 const TadarusGlobe = lazy(() => import('./demos/TadarusGlobe'))
-const DEMOS = { quiz: JisrQuiz, globe: TadarusGlobe }
+const CertVerify = lazy(() => import('./demos/CertVerify'))
+const DEMOS = { quiz: JisrQuiz, globe: TadarusGlobe, cert: CertVerify }
 
 function Demo({ p }) {
   const Live = DEMOS[p.demo]
@@ -17,6 +18,21 @@ function Demo({ p }) {
       <Suspense fallback={<div className="demo-loading">Loading {p.name}…</div>}>
         <Live />
       </Suspense>
+    </div>
+  )
+}
+
+const LOGOS = import.meta.glob('./assets/partners/*.webp', { eager: true, import: 'default' })
+const logoOf = (key) => LOGOS[`./assets/partners/${key}.webp`]
+
+function Partner({ p }) {
+  return (
+    <div className="partner">
+      <div className="logo">
+        {p.logo ? <img src={logoOf(p.logo)} alt={`${p.name} logo`} loading="lazy" /> : <span lang="ar" dir="rtl">{p.ar}</span>}
+      </div>
+      <strong>{p.name}</strong>
+      <small>{p.place}</small>
     </div>
   )
 }
@@ -72,7 +88,34 @@ function Project({ p, index }) {
   )
 }
 
+// Each block below the hero rises gently into view the first time it is scrolled to.
+const REVEAL = 'main h2, main .section-lede, .project-text, .project > .demo, .project > .frame, .partners li, .two-col > div, .contact .actions'
+
+function useReveal() {
+  useEffect(() => {
+    const els = [...document.querySelectorAll(REVEAL)]
+    if (!('IntersectionObserver' in window)) return undefined
+    els.forEach((el) => {
+      el.classList.add('reveal')
+      // cards in a row follow one another
+      const row = el.matches('.partners li') ? [...el.parentNode.children].indexOf(el) : el.matches('.project > *') ? 1 : 0
+      if (row) el.style.transitionDelay = `${row * 0.12}s`
+    })
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (!e.isIntersecting) return
+        e.target.classList.add('in')
+        io.unobserve(e.target)
+      }),
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.12 },
+    )
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+}
+
 export default function App() {
+  useReveal()
   return (
     <>
       <Hero />
@@ -85,29 +128,31 @@ export default function App() {
           </p>
           {projects.map((p, i) => <Project key={p.id} p={p} index={i} />)}
 
-          <div className="small-builds">
+          {smallBuilds.length > 0 && <div className="small-builds">
             {smallBuilds.map((b) => (
               <div key={b.name} className="card">
                 <h3>{b.name}</h3>
                 <p>{b.text}</p>
               </div>
             ))}
-          </div>
+          </div>}
         </section>
 
         <section className="section">
           <h2>Bringing institutions together</h2>
           <p className="section-lede">
-            Alongside the code, I coordinate partners across Indonesia, Saudi Arabia and Türkiye.
+            Beyond the code, I bring institutions in Indonesia, Saudi Arabia and Türkiye together.
             Agreements I facilitated:
           </p>
           <ul className="partners">
             {partnerships.map((x) => (
-              <li key={x.a}>
-                <span className="p-a">{x.a}</span>
-                <span className="p-line" aria-hidden="true" />
-                <span className="p-b">{x.b}</span>
-                <small>{x.kind}</small>
+              <li key={x.a.name + x.b.name}>
+                <div className="pair">
+                  <Partner p={x.a} />
+                  <span className="link" aria-hidden="true"><i /></span>
+                  <Partner p={x.b} />
+                </div>
+                <span className="kind">{x.kind}</span>
               </li>
             ))}
           </ul>

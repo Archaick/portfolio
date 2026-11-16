@@ -1,0 +1,159 @@
+/* Jisri, JISR's mascot — copied from the JISR app (src/index.css, JisriBuddy block). */
+/* ── JisriBuddy, the book as a character (owner, 28 Oct 2026: "like
+   Duolingo … expression changes for true / false … the completion") ── */
+.jbd .jbd-body, .jbd .jbd-eyes, .jbd .jbd-shadow { transform-box: fill-box }
+.jbd .jbd-body { transform-origin: 50% 100% }
+.jbd .jbd-armL { transform-box: view-box; transform-origin: 28px 94px }
+.jbd .jbd-armR { transform-box: view-box; transform-origin: 106px 94px }
+.jbd .jbd-eyes { transform-origin: center; animation: jbd-blink 3.6s infinite }
+@keyframes jbd-blink { 0%, 90%, 100% { transform: scaleY(1) } 94% { transform: scaleY(.1) } }
+.jbd .jbd-shadow { transform-origin: center }
+/* idle: springy breathing with a little hop now and then */
+.jbd-idle .jbd-body { animation: jbd-spring 2.6s cubic-bezier(.3,0,.4,1) infinite }
+@keyframes jbd-spring {
+  0%, 60%, 100% { transform: translateY(0) scale(1, 1) }
+  30% { transform: translateY(0) scale(1.02, .98) }
+  68% { transform: translateY(0) scale(1.08, .9) }
+  76% { transform: translateY(-14px) scale(.95, 1.06) }
+  86% { transform: translateY(0) scale(1.06, .94) }
+  92% { transform: translateY(0) scale(.98, 1.02) }
+}
+.jbd-idle .jbd-shadow { animation: jbd-shade 2.6s cubic-bezier(.3,0,.4,1) infinite }
+@keyframes jbd-shade { 0%, 68%, 86%, 100% { transform: scale(1); opacity: .16 } 76% { transform: scale(.7); opacity: .08 } }
+.jbd-talk .jbd-armR { animation: jbd-wave .9s ease-in-out infinite }
+@keyframes jbd-wave { 0%, 100% { transform: rotate(-95deg) } 50% { transform: rotate(-130deg) } }
+.jbd-talk .jbd-smile { opacity: 0 }
+.jbd-talk .jbd-mouth { transform-box: fill-box; transform-origin: center; animation: jbd-talk .32s ease-in-out infinite alternate }
+@keyframes jbd-talk { from { transform: scaleY(.25) } to { transform: scaleY(1) } }
+/* happy: a squashy jump, arms up, sparkles */
+.jbd-happy .jbd-body { animation: jbd-jump .62s cubic-bezier(.3,0,.4,1) 2 }
+@keyframes jbd-jump {
+  0%, 100% { transform: translateY(0) scale(1, 1) }
+  15% { transform: translateY(0) scale(1.12, .86) }
+  45% { transform: translateY(-30px) scale(.94, 1.08) rotate(-4deg) }
+  75% { transform: translateY(0) scale(1.1, .9) }
+  88% { transform: translateY(0) scale(.97, 1.03) }
+}
+.jbd-happy .jbd-armL, .jbd-celebrate .jbd-armL { animation: jbd-upL .5s ease-in-out infinite alternate }
+.jbd-happy .jbd-armR, .jbd-celebrate .jbd-armR { animation: jbd-upR .5s ease-in-out infinite alternate }
+@keyframes jbd-upL { from { transform: rotate(95deg) } to { transform: rotate(125deg) } }
+@keyframes jbd-upR { from { transform: rotate(-95deg) } to { transform: rotate(-125deg) } }
+.jbd .jbd-spark { transform-box: fill-box; transform-origin: center; opacity: 0; animation: jbd-spark 1.1s ease-out infinite }
+@keyframes jbd-spark { 0% { opacity: 0; transform: scale(.2) rotate(0) } 30% { opacity: 1; transform: scale(1.15) rotate(30deg) } 100% { opacity: 0; transform: scale(.4) rotate(90deg) } }
+/* sad: a "no" shake, then a little slump; a sweat drop */
+.jbd-sad .jbd-body { animation: jbd-no .5s ease-in-out 2, jbd-slump .4s .95s ease-out forwards }
+@keyframes jbd-no { 0%, 100% { transform: rotate(0) } 25% { transform: rotate(-7deg) } 75% { transform: rotate(7deg) } }
+@keyframes jbd-slump { to { transform: scale(1.03, .96) } }
+.jbd-sad .jbd-armL { transform: rotate(-12deg) }
+.jbd-sad .jbd-armR { transform: rotate(12deg) }
+.jbd .jbd-tear { transform-box: fill-box; transform-origin: top; animation: jbd-tear 1.1s ease-in infinite }
+.jbd .jbd-tear2 { animation-delay: .45s }
+@keyframes jbd-tear { 0% { opacity: 0; transform: translateY(-3px) scale(.6) } 20% { opacity: 1; transform: translateY(0) scale(1) } 100% { opacity: 0; transform: translateY(16px) scale(.9) } }
+.jbd .jbd-wobble { transform-box: fill-box; transform-origin: center; animation: jbd-wobble .3s ease-in-out infinite alternate }
+@keyframes jbd-wobble { from { transform: scale(1, 1) } to { transform: scale(1.12, .85) } }
+/* celebrate (28 Oct 2026, owner: no flip): happy bouncing jumps, a turning
+   golden glow, a popping star, confetti bursting out */
+.jbd-celebrate .jbd-body { animation: jbd-cheer 1.15s cubic-bezier(.3,0,.4,1) infinite }
+@keyframes jbd-cheer {
+  0%, 100% { transform: translateY(0) scale(1.1, .9) }
+  12% { transform: translateY(0) scale(.94, 1.08) }
+  38% { transform: translateY(-28px) scale(.97, 1.04) rotate(-3deg) }
+  58% { transform: translateY(0) scale(1.12, .88) }
+  70% { transform: translateY(-9px) scale(.98, 1.02) rotate(2deg) }
+  84% { transform: translateY(0) scale(1.04, .96) }
+}
+.jbd-celebrate .jbd-shadow { animation: jbd-cheer-shade 1.15s cubic-bezier(.3,0,.4,1) infinite }
+@keyframes jbd-cheer-shade { 0%, 58%, 84%, 100% { transform: scale(1); opacity: .16 } 38% { transform: scale(.6); opacity: .07 } 70% { transform: scale(.85) } }
+.jbd .jbd-rays { transform-box: view-box; transform-origin: 67px 78px; animation: jbd-turn 9s linear infinite }
+@keyframes jbd-turn { to { transform: rotate(360deg) } }
+.jbd .jbd-star { transform-box: fill-box; transform-origin: center; animation: jbd-star 1.15s cubic-bezier(.3,0,.4,1) infinite }
+@keyframes jbd-star { 0%, 100% { transform: translateY(4px) scale(.85) rotate(-8deg) } 40% { transform: translateY(-6px) scale(1.12) rotate(8deg) } }
+.jbd .jbd-burst { transform-box: fill-box; transform-origin: center; animation: jbd-burst 1.5s cubic-bezier(.15,.6,.4,1) infinite }
+@keyframes jbd-burst { 0% { opacity: 0; transform: translate(0, 0) rotate(0) scale(.6) } 12% { opacity: 1 } 75% { opacity: 1 } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(300deg) scale(1) } }
+/* loop (the grade cards): the happy jump again and again, with a rest */
+.jbd-loop.jbd-happy .jbd-body { animation: jbd-jump-loop 2.4s cubic-bezier(.3,0,.4,1) infinite }
+@keyframes jbd-jump-loop {
+  0%, 40%, 100% { transform: translateY(0) scale(1, 1) }
+  48% { transform: translateY(0) scale(1.12, .86) }
+  66% { transform: translateY(-26px) scale(.94, 1.08) rotate(-4deg) }
+  84% { transform: translateY(0) scale(1.1, .9) }
+  92% { transform: translateY(0) scale(.97, 1.03) }
+}
+/* angry (28 Oct 2026, owner: "an angry one, like Duolingo"): a stomp with
+   shaking fists, the cover flushing red, steam rising, the anger mark pulsing */
+.jbd-angry .jbd-body { animation: jbd-stomp .9s ease-in-out infinite }
+@keyframes jbd-stomp {
+  0%, 100% { transform: translateY(0) rotate(0) scale(1, 1) }
+  15% { transform: translateY(-4px) rotate(-3deg) scale(.98, 1.03) }
+  30% { transform: translateY(0) rotate(0) scale(1.06, .94) }
+  45% { transform: translateY(-4px) rotate(3deg) scale(.98, 1.03) }
+  60% { transform: translateY(0) rotate(0) scale(1.06, .94) }
+}
+.jbd-angry .jbd-armL { animation: jbd-fistL .3s ease-in-out infinite alternate }
+.jbd-angry .jbd-armR { animation: jbd-fistR .3s ease-in-out infinite alternate }
+@keyframes jbd-fistL { from { transform: rotate(-30deg) } to { transform: rotate(-48deg) } }
+@keyframes jbd-fistR { from { transform: rotate(30deg) } to { transform: rotate(48deg) } }
+.jbd .jbd-flush { animation: jbd-flush 1.8s ease-in-out infinite }
+@keyframes jbd-flush { 0%, 100% { opacity: .12 } 50% { opacity: .3 } }
+.jbd .jbd-vein { transform-box: fill-box; transform-origin: center; animation: jbd-vein .6s ease-in-out infinite alternate }
+@keyframes jbd-vein { from { transform: scale(.85) } to { transform: scale(1.15) } }
+.jbd .jbd-steam { transform-box: fill-box; transform-origin: center; animation: jbd-steam 1.4s ease-out infinite }
+.jbd .jbd-steam2 { animation-delay: .7s }
+@keyframes jbd-steam { 0% { opacity: 0; transform: translateY(8px) scale(.6) } 25% { opacity: .95 } 100% { opacity: 0; transform: translateY(-16px) scale(1.25) } }
+/* the graduation cap's tassel swings */
+.jbd .jbd-tassel { transform-box: view-box; transform-origin: 67px 27px; animation: jbd-tassel 1.6s ease-in-out infinite }
+@keyframes jbd-tassel { 0%, 100% { transform: rotate(-4deg) } 50% { transform: rotate(6deg) } }
+/* 29 Oct 2026 (owner): reading, thinking, bow, sleepy and down (sad, no tears) */
+/* reading — the arms hold the book (its hands are drawn on it), eyes run along, a page turns */
+.jbd-reading .jbd-armL, .jbd-reading .jbd-armR { opacity: 0 }
+.jbd-reading .jbd-body { animation: jbd-spring 3.2s cubic-bezier(.3,0,.4,1) infinite }
+.jbd-reading .jbd-eyes { animation: jbd-read 2.6s ease-in-out infinite }
+@keyframes jbd-read { 0%, 100% { transform: translateX(-2.5px) } 45% { transform: translateX(2.5px) } 55% { transform: translateX(2.5px) translateY(1px) } }
+.jbd .jbd-page { transform-box: view-box; transform-origin: 67px 120px; animation: jbd-page 3.6s ease-in-out infinite }
+@keyframes jbd-page { 0%, 55% { transform: scaleX(1); opacity: 1 } 80% { transform: scaleX(-1); opacity: 1 } 92% { transform: scaleX(-1); opacity: 0 } 100% { transform: scaleX(1); opacity: 0 } }
+/* thinking — a hand to the chin, a slow tilt, the bubble bobbing */
+.jbd-thinking .jbd-armR { transform: rotate(96deg) }   /* the hand comes to rest under his chin */
+.jbd-thinking .jbd-body { animation: jbd-ponder 3.4s ease-in-out infinite }
+@keyframes jbd-ponder { 0%, 100% { transform: rotate(-2.5deg) } 50% { transform: rotate(2.5deg) } }
+.jbd .jbd-q { transform-box: fill-box; transform-origin: 0% 100%; animation: jbd-q 2.2s ease-in-out infinite }
+@keyframes jbd-q { 0%, 100% { transform: translateY(0) scale(1) } 50% { transform: translateY(-3px) scale(1.05) } }
+/* bow — a deep bow and back up, one arm across the front */
+.jbd-bow .jbd-body { animation: jbd-bow 2.4s ease-in-out infinite }
+@keyframes jbd-bow { 0%, 20%, 100% { transform: none } 40%, 62% { transform: translateY(9px) scaleY(.82) rotate(-7deg) } }
+.jbd-bow .jbd-armR { transform: rotate(62deg) }
+/* sleepy — slow breaths, z z Z drifting up */
+.jbd-sleepy .jbd-body { animation: jbd-breathe 3.6s ease-in-out infinite }
+@keyframes jbd-breathe { 0%, 100% { transform: scaleY(1) rotate(-2deg) } 50% { transform: scaleY(1.035) rotate(-2deg) } }
+.jbd-sleepy .jbd-armL { transform: rotate(8deg) }
+.jbd-sleepy .jbd-armR { transform: rotate(-8deg) }
+.jbd .jbd-snore { transform-box: fill-box; transform-origin: center; animation: jbd-snore 3.6s ease-in-out infinite }
+@keyframes jbd-snore { 0%, 100% { transform: scale(.7) } 50% { transform: scale(1.15) } }
+.jbd .jbd-z { opacity: 0; animation: jbd-z 3s ease-out infinite }
+.jbd .jbd-z2 { animation-delay: 1s } .jbd .jbd-z3 { animation-delay: 2s }
+@keyframes jbd-z { 0% { opacity: 0; transform: translate(0, 4px) } 25% { opacity: 1 } 100% { opacity: 0; transform: translate(6px, -12px) } }
+/* down — sad without tears: a slow sigh, arms hanging */
+.jbd-down .jbd-body { animation: jbd-sigh 3.8s ease-in-out infinite }
+@keyframes jbd-sigh { 0%, 100% { transform: none } 40%, 55% { transform: translateY(3px) scaleY(.95) rotate(2deg) } }
+.jbd-down .jbd-armL { transform: rotate(14deg) }
+.jbd-down .jbd-armR { transform: rotate(-14deg) }
+@media (prefers-reduced-motion: reduce) { .jbd *, .jbd { animation: none !important } }
+
+/* ✏️ Practice (owner, 29 Oct 2026: "like Duolingo, especially the modals"):
+   each question slides in, the answer sheet rises, a miss shakes. */
+.pp-in { animation: pp-in .28s ease-out }
+@keyframes pp-in { from { opacity: 0; transform: translateX(24px) } to { opacity: 1; transform: none } }
+[dir="rtl"] .pp-in, .pp-in:dir(rtl) { animation-name: pp-in-rtl }
+@keyframes pp-in-rtl { from { opacity: 0; transform: translateX(-24px) } to { opacity: 1; transform: none } }
+.pp-sheet { animation: pp-up .25s cubic-bezier(.2, .9, .3, 1.2) }
+@keyframes pp-up { from { transform: translateY(100%) } to { transform: none } }
+.pp-shake { animation: pp-shake .4s ease-in-out }
+@keyframes pp-shake { 0%, 100% { transform: none } 20%, 60% { transform: translateX(-6px) } 40%, 80% { transform: translateX(6px) } }
+.pp-opt:active:not(:disabled) { transform: translateY(2px); border-bottom-width: 2px }
+@media (prefers-reduced-motion: reduce) { .pp-in, .pp-sheet, .pp-shake { animation: none !important } }
+/* ⏩ the line on CONTINUE that runs down until the next question comes by itself */
+.pp-auto { width: 100%; animation: pp-auto linear forwards }
+@keyframes pp-auto { from { width: 100% } to { width: 0 } }
+
+/* 🐣 Jisri gallery's "Motion off" — what a student with reduced motion sees */
+.jg-still *, .jg-still *::before, .jg-still *::after { animation: none !important; transition: none !important }
+

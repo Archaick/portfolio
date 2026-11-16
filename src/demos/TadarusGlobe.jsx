@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { geoCentroid, geoCircle, geoContains, geoDistance, geoGraticule10, geoOrthographic, geoPath } from 'd3-geo'
 import { feature, merge } from 'topojson-client'
 import world from 'world-atlas/countries-110m.json'
+import GuruPreview from './GuruPreview'
 import './TadarusGlobe.css'
 
 // A light copy of Tadarus Global (markaztadarus.com/global): drag to turn the
@@ -17,6 +18,7 @@ const HOLY = [
   { name: 'Al-Quds', at: [35.2354, 31.7781] },
 ]
 const MAKKAH = HOLY[0].at
+const LEARNER = [106.8456, -6.2088] // a teacher studying now in Jakarta (demo)
 
 const GRATICULE = geoGraticule10()
 const SPHERE = { type: 'Sphere' }
@@ -70,6 +72,9 @@ export default function TadarusGlobe() {
   const [selected, setSelected] = useState(null)
   const [hover, setHover] = useState(null)
   const [onScreen, setOnScreen] = useState(false)
+  // the Tadarus Guru preview: opens by itself the first time the globe is seen, or from the bubble
+  const [guru, setGuru] = useState(false)
+  const opened = useRef(false)
   const sun = useMemo(() => subsolarPoint(), [])
   const reduceMotion = useMemo(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches, [])
 
@@ -87,6 +92,15 @@ export default function TadarusGlobe() {
       io.disconnect()
     }
   }, [])
+
+  useEffect(() => {
+    if (!onScreen || opened.current) return undefined
+    const id = setTimeout(() => {
+      opened.current = true
+      setGuru(true)
+    }, 1800)
+    return () => clearTimeout(id)
+  }, [onScreen])
 
   const flyTo = useCallback((target, ms = 1100) => {
     const from = { ...view.current }
@@ -120,7 +134,7 @@ export default function TadarusGlobe() {
         v.lambda += m.vx * dt
         m.vx *= Math.pow(0.93, dt / 16)
         moved = true
-      } else if (!reduceMotion && !m.dragging && !selected && now - m.lastInput > 4000) {
+      } else if (!reduceMotion && !m.dragging && !selected && !guru && now - m.lastInput > 4000) {
         v.lambda += (4 * dt) / 1000
         moved = true
       }
@@ -129,7 +143,11 @@ export default function TadarusGlobe() {
     }
     frame = requestAnimationFrame(step)
     return () => cancelAnimationFrame(frame)
-  }, [onScreen, reduceMotion, selected, redraw])
+  }, [onScreen, reduceMotion, selected, guru, redraw])
+
+  useEffect(() => {
+    if (guru) flyTo({ lambda: -LEARNER[0] + 18, phi: -14, zoom: 1.1 })
+  }, [guru, flyTo])
 
   const base = Math.min(size.w, size.h) * 0.42
   const scale = base * view.current.zoom
@@ -142,8 +160,9 @@ export default function TadarusGlobe() {
   const centre = [-view.current.lambda, -view.current.phi]
   const visible = (p) => geoDistance(p, centre) < Math.PI / 2 - 0.03
 
+  const cx = size.w / 2
   const countryAt = (x, y) => {
-    const dx = x - size.w / 2
+    const dx = x - cx
     const dy = y - size.h / 2
     if (dx * dx + dy * dy > scale * scale) return null
     const p = projection.invert([x, y])
@@ -233,7 +252,7 @@ export default function TadarusGlobe() {
               <stop offset="1" stopColor="#5fa8ff" stopOpacity="0" />
             </radialGradient>
           </defs>
-          <circle cx={size.w / 2} cy={size.h / 2} r={scale * 1.16} fill="url(#tg-air)" />
+          <circle cx={cx} cy={size.h / 2} r={scale * 1.16} fill="url(#tg-air)" />
           <path d={path(SPHERE)} fill="url(#tg-ocean)" />
           <path d={path(GRATICULE)} className="tg-grat" />
           {COUNTRIES.map((c) => {
@@ -264,6 +283,37 @@ export default function TadarusGlobe() {
           ))}
         </svg>
 
+        {visible(LEARNER) && (() => {
+          const [x, y] = projection(LEARNER)
+          // the mini app sits above the dot (below it when the dot is near the top), kept inside the box
+          const below = y < 150
+          const left = Math.min(Math.max(x, 96), size.w - 96)
+          return (
+            <>
+              <button
+                type="button"
+                className={`tg-learner ${guru ? 'open' : ''}`}
+                style={{ left: x, top: y }}
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={() => setGuru((g) => !g)}
+                aria-expanded={guru}
+                aria-label={guru ? 'Hide Tadarus Guru' : 'A teacher is studying now in Jakarta: show Tadarus Guru'}
+              >
+                <span className="tg-learner-dot" />
+              </button>
+              {guru && (
+                <div
+                  className={`tg-pop ${below ? 'below' : ''}`}
+                  style={{ left, top: y, '--tail': `${x - left}px` }}
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <GuruPreview below={below} />
+                </div>
+              )}
+            </>
+          )
+        })()}
+
         <div className="tg-tools">
           <button type="button" onClick={() => zoomBy(1.5)} aria-label="Zoom in">+</button>
           <button type="button" onClick={() => zoomBy(1 / 1.5)} aria-label="Zoom out">−</button>
@@ -278,12 +328,13 @@ export default function TadarusGlobe() {
             <span>{info.text}</span>
           </>
         ) : (
-          <span>Drag to turn the Earth · tap a country</span>
+          <span>Drag to turn the Earth · tap a country · tap the green dot to see a teacher learning</span>
         )}
       </div>
       <ul className="tg-legend">
         <li><i className="origin" /> Where Tadarus began</li>
         <li><i className="program" /> Tadarus programmes</li>
+        <li><i className="learner" /> Studying now</li>
         <li><i className="night" /> Night right now</li>
       </ul>
     </div>

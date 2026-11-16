@@ -23,8 +23,13 @@
 }
 .jq-logo { width: 28px; height: 28px; border-radius: 8px; }
 
+/* Jisri asks, in a speech bubble beside him (as in the app) */
+.jq-ask { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 18px; }
+.jq-jisri { flex-shrink: 0; }
+.jq-jisri-end { display: block; margin: 0 auto 6px; }
 .jq .jq-q {
-  border: 2px solid #e5e5e5; border-radius: 16px; padding: 12px 16px; margin-bottom: 18px;
+  flex: 1; margin: 0;
+  border: 2px solid #e5e5e5; border-radius: 16px; padding: 12px 16px;
   font-weight: 800; font-size: clamp(1.05rem, 2.4vw, 1.3rem); line-height: 1.25; color: #0b3366;
 }
 .jq-options { display: grid; gap: 10px; }
@@ -50,10 +55,11 @@
 
 .jq-sheet {
   position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 16px 20px; animation: jq-rise 0.25s ease-out;
+  gap: 12px; padding: 10px 20px 10px 12px; animation: jq-rise 0.25s ease-out;
 }
 .jq-sheet.ok { background: #d7ffb8; color: #58a700; }
 .jq-sheet.no { background: #ffdfe0; color: #ea2b2b; }
+.jq-sheet-text { display: flex; align-items: center; gap: 8px; }
 .jq-sheet strong { display: block; font-size: 1.2rem; font-weight: 800; }
 .jq-sheet span { font-size: 0.85rem; font-weight: 600; }
 .jq-sheet b { font: 700 1.1rem 'Amiri', serif; }
@@ -68,7 +74,7 @@
 .jq-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #58a700; }
 .jq-btn-ghost { background: #fff; color: #1a569c; border: 2px solid #e5e5e5; box-shadow: 0 4px 0 #e5e5e5; }
 
-.jq-done { text-align: center; padding: 28px 8px 0; }
+.jq-done { text-align: center; padding: 4px 8px 0; }
 .jq .jq-done p { color: #334155; }
 .jq .jq-big { font-size: 1.8rem; font-weight: 800; color: #58a700 !important; margin-bottom: 8px; }
 .jq-small { font-size: 0.9rem; margin: 10px auto 22px; max-width: 34ch; }

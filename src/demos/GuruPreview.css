@@ -1,0 +1,52 @@
+/* A tiny Tadarus Guru bubble pinned above the teacher's dot on the globe. */
+.gp {
+  position: relative; width: 176px; border-radius: 12px; font-family: var(--sans);
+  background: linear-gradient(180deg, #0c1a3f 0%, #1d3566 46%, #fff 46.1%);
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(74, 222, 128, 0.45);
+  animation: gp-pop 0.3s cubic-bezier(0.2, 0.8, 0.3, 1.2);
+}
+/* the little tail pointing at the dot */
+.gp::after {
+  content: ''; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; margin-left: -6px;
+  background: #fff; transform: rotate(45deg); box-shadow: 1px 1px 0 rgba(74, 222, 128, 0.45);
+}
+.gp.below::after { bottom: auto; top: -6px; background: #0c1a3f; box-shadow: -1px -1px 0 rgba(74, 222, 128, 0.45); }
+@keyframes gp-pop { from { opacity: 0; transform: translateY(6px) scale(0.85); } }
+
+.gp-stars { display: block; width: 100%; height: auto; padding: 4px 6px 0; }
+.gp-star .gp-halo { opacity: 0; transition: opacity 0.5s; filter: blur(2.5px); }
+.gp-star .gp-glint { opacity: 0; transition: opacity 0.5s; }
+.gp-star .gp-core { opacity: 0.35; transition: opacity 0.5s; }
+.gp-star.lit .gp-halo { opacity: 0.55; }
+.gp-star.lit .gp-glint, .gp-star.lit .gp-core { opacity: 1; }
+.gp-star.lit .gp-glint { transform-box: fill-box; transform-origin: center; animation: gp-glint 0.45s ease-out; }
+@keyframes gp-glint { from { transform: scale(0.2); } }
+
+.gp-text { position: relative; padding: 7px 10px 9px; color: #0b2244; min-height: 50px; }
+.gp-text > div { animation: gp-in 0.3s ease-out; }
+@keyframes gp-in { from { opacity: 0; transform: translateY(4px); } }
+
+.gp-login { display: flex; align-items: center; gap: 8px; }
+.gp-avatar {
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+  background: #1d3566; color: #ffd98a; font: 700 0.75rem var(--sans); box-shadow: 0 0 0 2px #4ade80;
+}
+.gp-login strong, .gp-done strong { display: block; font-size: 0.76rem; }
+.gp-login small, .gp-done small { display: block; font-size: 0.64rem; color: #64748b; }
+
+.gp .gp-q { margin: 0 0 5px; font-size: 0.72rem; font-weight: 700; color: #0b2244; }
+.gp-q span { font: 700 0.95rem 'Amiri', serif; }
+.gp-opts { display: flex; gap: 5px; }
+.gp-opt {
+  flex: 1; text-align: center; font-size: 0.64rem; font-weight: 600; padding: 3px 4px; border-radius: 7px;
+  border: 1.5px solid #e2e8f0; border-bottom-width: 2.5px; color: #334155; transition: all 0.25s;
+}
+.gp-opt.tapped { border-color: #1a73e8; background: #dbeafe; color: #0b3366; transform: translateY(1px) scale(0.96); box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.25); }
+.gp-opt.right { border-color: #58cc02; background: #d7ffb8; color: #3f7d00; }
+.gp-opt.dim { opacity: 0.45; }
+.gp-done { text-align: center; }
+.gp-done strong { color: #b45309; font-size: 0.82rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gp, .gp-text > div, .gp-star.lit .gp-glint { animation: none; }
+}

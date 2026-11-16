@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { STARS, formatClock, jakartaMinutes, phaseName, skyAt } from './sky'
+import { STARS, jakartaMinutes, skyAt } from './sky'
 import { profile } from './content'
 import portrait from './assets/saeed.webp'
+import FallIntro from './FallIntro'
+import { gentleIntro, shouldPlayIntro } from './intro'
 
 // ?t=05:40 in the URL previews the sky at a given Jakarta time.
 function overrideMinutes() {
@@ -23,10 +25,17 @@ function useJakartaTime() {
 export default function Hero() {
   const minutes = useJakartaTime()
   const sky = skyAt(minutes)
+  // 'fall' (the opening plays) → 'land' (the hero settles in) → 'still'
+  const [phase, setPhase] = useState(() => (shouldPlayIntro() ? 'fall' : 'still'))
+  useEffect(() => {
+    if (phase !== 'land') return undefined
+    const id = setTimeout(() => setPhase('still'), 1400)
+    return () => clearTimeout(id)
+  }, [phase])
 
   return (
     <header
-      className="hero"
+      className={`hero is-${phase}`}
       style={{
         '--sky-top': sky.top,
         '--sky-mid': sky.mid,
@@ -34,18 +43,39 @@ export default function Hero() {
         '--glow': sky.glow,
       }}
     >
-      <svg className="stars" aria-hidden="true">
-        {STARS.map((s, i) => (
-          <circle key={i} cx={`${s.x}%`} cy={`${s.y}%`} r={s.r} fill="#fff" opacity={s.o * sky.stars} />
-        ))}
+      <svg className="stars" aria-hidden="true" opacity={sky.stars}>
+        <defs>
+          <linearGradient id="glint-h">
+            <stop offset="0" stopColor="#fff8e1" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#fff8e1" stopOpacity="0.7" />
+            <stop offset="1" stopColor="#fff8e1" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="glint-v" x2="0" y2="1">
+            <stop offset="0" stopColor="#fff8e1" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#fff8e1" stopOpacity="0.7" />
+            <stop offset="1" stopColor="#fff8e1" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {STARS.map((s, i) => {
+          const style = s.shimmer
+            ? { '--o': s.o, animationDuration: `${s.dur}s`, animationDelay: `${s.delay}s` }
+            : undefined
+          return (
+            <g key={i} className={s.shimmer ? 'star shimmer' : 'star'} style={style} opacity={s.shimmer ? undefined : s.o}>
+              {s.glint && (
+                <>
+                  <rect x={`${s.x}%`} y={`${s.y}%`} width="14" height="0.8" transform="translate(-7 -0.4)" fill="url(#glint-h)" />
+                  <rect x={`${s.x}%`} y={`${s.y}%`} width="0.8" height="14" transform="translate(-0.4 -7)" fill="url(#glint-v)" />
+                </>
+              )}
+              <circle cx={`${s.x}%`} cy={`${s.y}%`} r={s.r} fill="#fff" />
+            </g>
+          )
+        })}
       </svg>
       <div className="horizon" aria-hidden="true" />
 
       <div className="hero-inner">
-        <p className="sky-label">
-          <span className="dot" aria-hidden="true" />
-          Sky over Jakarta · {formatClock(minutes)} WIB · {phaseName(minutes)}
-        </p>
         <div className="name-row">
           <img className="portrait" src={portrait} alt={profile.name} width="160" height="160" />
           <h1>{profile.name}</h1>
@@ -60,6 +90,7 @@ export default function Hero() {
       </div>
 
       <a className="scroll-hint" href="#work">See the work ↓</a>
+      {phase === 'fall' && <FallIntro skyTop={sky.top} skyMid={sky.mid} skyLow={sky.low} glow={sky.glow} gentle={gentleIntro()} onDone={() => setPhase('land')} />}
     </header>
   )
 }

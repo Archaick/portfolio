@@ -32,72 +32,60 @@ export const projects = [
   {
     id: 'tadarus',
     flag: 'Markaz Tadarus Indonesia',
-    name: 'Belajar 5T',
-    tagline: 'Teacher learning platform for Qur’an schools',
+    name: 'Belajar 5T & Tadarus Global',
+    tagline: 'Qur’an teachers learn in five steps — and the globe shows where',
     url: 'https://markaztadarus.com',
     host: 'markaztadarus.com',
-    stat: { value: '3', label: 'languages — Indonesian, English, Arabic (full RTL)' },
-    problem:
-      'Qur’an teachers across many schools needed one place to learn, be assessed and be followed up — without paperwork.',
+    stat: { value: '5T', label: 'steps per surah, one star each' },
+    problem: 'Qur’an teachers across many schools needed one place to learn and be followed up.',
     built: [
-      'Schools join with a code; admins approve teachers',
-      'Lessons with quizzes in 10+ question types and progress tracking',
-      'Qur’an recitation ayah by ayah, live highlighting and a choice of reciters',
-      'Audit history, recycle bin and “view as teacher” for admins',
+      'Each surah in five steps, with quizzes and ayah-by-ayah recitation',
+      'Schools join by code; admins approve and follow progress',
+      'A live globe of every programme, joined to Makkah',
     ],
-    stack: ['React', 'Mantine', 'Firebase', 'PWA'],
-  },
-  {
-    id: 'global',
-    flag: 'Markaz Tadarus Indonesia',
-    name: 'Tadarus Global',
-    tagline: 'Every country running Tadarus, on one living globe',
-    url: 'https://markaztadarus.com/global',
-    host: 'markaztadarus.com/global',
-    stat: null,
-    problem:
-      'Partners and donors needed to see at a glance where Tadarus reaches — and that it all traces back to Makkah.',
-    built: [
-      'A globe drawn from map data, turned by drag, pinch or scroll',
-      'Programme countries lit in gold and joined to Makkah by a line of light',
-      'Real-time day and night, the true Sun and Moon, and live session markers',
-      'Close up, Indonesia’s provinces with their programme counts',
-    ],
-    stack: ['React', 'd3-geo', 'TopoJSON', 'Firebase'],
+    stack: ['React', 'Mantine', 'Firebase', 'd3-geo', 'PWA'],
     demo: 'globe',
   },
   {
     id: 'hijaz',
-    flag: 'Institute website',
+    flag: 'Foundation website & admin',
     name: 'Markaz Al-Hijaz',
-    tagline: 'Multilingual institute site with admin tools',
-    url: null, // TODO: confirm public URL
-    host: 'markaz-al-hijaz',
-    stat: null, // TODO: an outcome number from Saeed
-    problem: 'The institute needed a fast public site that staff could update themselves.',
+    tagline: 'A foundation’s site where every certificate can be checked in one scan',
+    url: 'https://markazalhijaz.org',
+    host: 'markazalhijaz.org',
+    stat: { value: '1 scan', label: 'to prove a printed certificate is genuine' },
+    problem: 'The foundation issues many certificates — and whoever receives one needs to know it is real.',
     built: [
-      'Static-exported Next.js site with multiple languages',
-      'Admin tools for news, forms and activity logs',
+      'Certificates issued in bulk from Excel, with signatures, stamps and a QR code that is checked live',
+      'A form builder with quizzes, file uploads and printable PDF answers',
+      'News, donations, short links and a globe of programmes',
+      'Admin roles, change history and a recycle bin — in Indonesian, English and Arabic',
     ],
-    stack: ['Next.js', 'next-intl', 'Firebase'],
+    stack: ['Next.js', 'next-intl', 'Mantine', 'Firebase'],
+    demo: 'cert',
   },
 ]
 
-export const smallBuilds = [
-  {
-    name: 'Bulk certificate system',
-    text: 'Hundreds of certificates from one Excel file — each with a QR code for public online verification, signatures, stamps and print-ready PDFs.',
-  },
-  {
-    name: 'Belajar 5T recitation player',
-    text: 'Qur’an recitation ayah by ayah with the current ayah highlighted live, and a choice of reciters.',
-  },
-]
+export const smallBuilds = []
 
+// Logos come from Saeed's other projects (hijaz/public/partners). Waqf Al-I'jaz has no
+// logo on file, so it shows its Arabic name. TODO: confirm the Riau and Gontor logos.
 export const partnerships = [
-  { a: 'Riau University', b: 'Waqf Al-I’jaz, Istanbul', kind: 'Educational cooperation agreement' },
-  { a: 'YARSI University', b: 'Waqf Al-I’jaz, Istanbul', kind: 'Higher-education cooperation agreement' },
-  { a: 'University of Darussalam Gontor', b: 'Hidayaa, Makkah', kind: 'Higher-education partnership agreement' },
+  {
+    kind: 'Educational cooperation',
+    a: { name: 'Riau University', place: 'Indonesia', logo: 'uir' },
+    b: { name: 'Waqf Al-I’jaz', place: 'Istanbul', ar: 'وقف الإعجاز' },
+  },
+  {
+    kind: 'Higher-education cooperation',
+    a: { name: 'YARSI University', place: 'Indonesia', logo: 'yarsi' },
+    b: { name: 'Waqf Al-I’jaz', place: 'Istanbul', ar: 'وقف الإعجاز' },
+  },
+  {
+    kind: 'Higher-education partnership',
+    a: { name: 'UNIDA Gontor', place: 'Indonesia', logo: 'unida' },
+    b: { name: 'Hidayaa', place: 'Makkah', logo: 'hidayaa' },
+  },
 ]
 
 export const experience = [
