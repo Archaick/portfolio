@@ -79,7 +79,7 @@ export default function CertVerify() {
           <p className="cv-small">diberikan kepada</p>
           <p className="cv-name">Fulan bin Fulan</p>
           <p className="cv-small">atas kelulusan program</p>
-          <p className="cv-prog">Tahsin Al-Qur’an</p>
+          <p className="cv-prog">Bahasa Arab Dasar</p>
           <div className="cv-foot">
             <div className="cv-sign">
               <svg viewBox="0 0 60 20" aria-hidden="true"><path d="M2 14 C10 2, 14 18, 22 9 S34 4, 38 12 S50 16, 58 6" /></svg>
@@ -125,7 +125,7 @@ export default function CertVerify() {
               <p className="cv-ok-sub">Terverifikasi · Markaz Al-Hijaz</p>
               <dl>
                 <dt>Nama</dt><dd>Fulan bin Fulan</dd>
-                <dt>Program</dt><dd>Tahsin Al-Qur’an</dd>
+                <dt>Program</dt><dd>Bahasa Arab Dasar</dd>
                 <dt>Kode</dt><dd>{CODE}</dd>
               </dl>
               <p className="cv-live"><i /> Dicek langsung dari database</p>

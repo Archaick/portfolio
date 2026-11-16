@@ -14,8 +14,6 @@ const ORIGIN = 'Saudi Arabia'
 const PROGRAMS = { Indonesia: [106.8456, -6.2088] } // country → where the line lands (Jakarta)
 const HOLY = [
   { name: 'Makkah', at: [39.8262, 21.4225], main: true },
-  { name: 'Madinah', at: [39.6111, 24.4686] },
-  { name: 'Al-Quds', at: [35.2354, 31.7781] },
 ]
 const MAKKAH = HOLY[0].at
 const LEARNER = [106.8456, -6.2088] // a teacher studying now in Jakarta (demo)
@@ -57,8 +55,8 @@ function subsolarPoint(date = new Date()) {
 
 function describe(name) {
   if (!name) return null
-  if (name === ORIGIN) return { name, kind: 'origin', text: 'Where Tadarus began — Makkah al-Mukarramah.' }
-  if (PROGRAMS[name]) return { name, kind: 'program', text: 'Tadarus programmes run here, joined to Makkah.' }
+  if (name === ORIGIN) return { name, kind: 'origin', text: 'Where the programme began: Makkah, Saudi Arabia.' }
+  if (PROGRAMS[name]) return { name, kind: 'program', text: 'Programmes run here, followed live from Saudi Arabia.' }
   return { name, kind: 'none', text: 'No Tadarus programme here yet.' }
 }
 
@@ -332,8 +330,8 @@ export default function TadarusGlobe() {
         )}
       </div>
       <ul className="tg-legend">
-        <li><i className="origin" /> Where Tadarus began</li>
-        <li><i className="program" /> Tadarus programmes</li>
+        <li><i className="origin" /> Where it began</li>
+        <li><i className="program" /> Programmes</li>
         <li><i className="learner" /> Studying now</li>
         <li><i className="night" /> Night right now</li>
       </ul>

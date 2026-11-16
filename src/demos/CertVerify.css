@@ -21,9 +21,9 @@
   padding: 7% 5% 4%; color: #2b2410;
 }
 .cv .cv-org { font: 600 clamp(7px, 1vw, 10px) var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: #8a6d24; }
-.cv .cv-title { font: 500 clamp(16px, 2.6vw, 26px)/1.1 var(--serif); color: #1f2a44; margin: 1% 0 2%; }
+.cv .cv-title { font: 500 clamp(16px, 2.6vw, 26px)/1.1 Georgia, 'Times New Roman', serif; color: #1f2a44; margin: 1% 0 2%; }
 .cv .cv-small { font-size: clamp(6px, 0.8vw, 9px); color: #6b6250; }
-.cv .cv-name { font: 600 clamp(12px, 1.8vw, 18px) var(--serif); color: #1f2a44; margin: 1% 0 2%; border-bottom: 1px solid #d8c69a; padding: 0 8% 1%; }
+.cv .cv-name { font: 600 clamp(12px, 1.8vw, 18px) Georgia, 'Times New Roman', serif; color: #1f2a44; margin: 1% 0 2%; border-bottom: 1px solid #d8c69a; padding: 0 8% 1%; }
 .cv .cv-prog { font: 600 clamp(8px, 1.1vw, 11px) var(--sans); color: #8a6d24; }
 .cv-foot { width: 100%; display: flex; align-items: flex-end; justify-content: space-between; margin-top: auto; }
 .cv-sign { display: grid; justify-items: center; width: 28%; }

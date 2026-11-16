@@ -8,8 +8,8 @@
   --gold-soft: #e9d3a1;
   --text: #e8ecf5;
   --muted: #a3aec6;
-  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --serif: var(--sans); /* one family throughout; the certificate demo keeps its own serif */
   --wrap: 1120px;
   color-scheme: dark;
 }
@@ -27,7 +27,7 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.15; margin: 0; }
+h1, h2, h3 { font-family: var(--sans); font-weight: 700; letter-spacing: -0.025em; line-height: 1.12; margin: 0; }
 h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); color: #fff; }
 h3 { font-size: clamp(1.6rem, 3.2vw, 2.2rem); color: #fff; }
 h4 {
@@ -85,7 +85,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-shadow: 0 2px 30px rgba(5, 11, 28, 0.35);
 }
 .lede {
-  font-family: var(--serif); font-size: clamp(1.25rem, 3vw, 1.75rem); line-height: 1.35;
+  font-family: var(--sans); font-weight: 500; letter-spacing: -0.01em; font-size: clamp(1.2rem, 2.8vw, 1.6rem); line-height: 1.4;
   color: var(--gold-soft); max-width: 30ch; margin: 18px 0 14px;
 }
 .sub { color: rgba(232, 236, 245, 0.85); max-width: 56ch; margin-bottom: 32px; font-size: 0.98rem; }
@@ -114,7 +114,7 @@ main { padding: 0 20px; }
   display: flex; align-items: baseline; gap: 14px; margin: 28px 0 4px;
   padding: 18px 22px; border-radius: 14px; background: var(--navy-900); border: 1px solid var(--line);
 }
-.stat-value { font: 500 3rem/1 var(--serif); color: var(--gold); }
+.stat-value { font: 800 2.8rem/1 var(--sans); letter-spacing: -0.03em; color: var(--gold); }
 .stat-label { color: var(--text); font-size: 0.95rem; line-height: 1.4; }
 .ticks li { position: relative; padding-left: 22px; margin: 6px 0; color: #cfd6e6; }
 .ticks li::before {
@@ -142,7 +142,7 @@ main { padding: 0 20px; }
   aspect-ratio: 16 / 10; display: grid; place-content: center; text-align: center; gap: 6px;
   background: linear-gradient(160deg, var(--navy-700), var(--navy-900) 70%);
 }
-.frame-body strong { font: 500 2rem var(--serif); color: var(--gold-soft); }
+.frame-body strong { font: 700 1.8rem var(--sans); color: var(--gold-soft); }
 .frame-body small { color: var(--muted); }
 
 .small-builds { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding-top: 24px; border-top: 1px solid var(--line); margin-top: 8px; }
@@ -166,7 +166,7 @@ main { padding: 0 20px; }
 }
 .partner .logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .partner .logo span { font: 700 1.05rem/1.15 'Amiri', serif; color: #0b2244; text-align: center; }
-.partner strong { font: 500 0.98rem/1.25 var(--serif); color: #fff; }
+.partner strong { font: 700 0.95rem/1.3 var(--sans); color: #fff; }
 .partner small { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
 .link { position: relative; height: 76px; display: grid; place-items: center; }
 .link::before { content: ''; position: absolute; left: -6px; right: -6px; top: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }

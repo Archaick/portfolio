@@ -123,7 +123,7 @@ export default function App() {
         <section id="work" className="section">
           <h2>Selected work</h2>
           <p className="section-lede">
-            I design, build and run every one of these myself — from the database rules to the
+            I design, build and run every one of these myself, from the database rules to the
             last right-to-left Arabic label.
           </p>
           {projects.map((p, i) => <Project key={p.id} p={p} index={i} />)}
