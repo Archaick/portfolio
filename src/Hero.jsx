@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { STARS, formatClock, jakartaMinutes, phaseName, skyAt } from './sky'
 import { profile } from './content'
+import portrait from './assets/saeed.webp'
 
 // ?t=05:40 in the URL previews the sky at a given Jakarta time.
 function overrideMinutes() {
@@ -45,7 +46,10 @@ export default function Hero() {
           <span className="dot" aria-hidden="true" />
           Sky over Jakarta · {formatClock(minutes)} WIB · {phaseName(minutes)}
         </p>
-        <h1>{profile.name}</h1>
+        <div className="name-row">
+          <img className="portrait" src={portrait} alt={profile.name} width="160" height="160" />
+          <h1>{profile.name}</h1>
+        </div>
         <p className="lede">{profile.line}</p>
         <p className="sub">{profile.sub}</p>
         <div className="actions">

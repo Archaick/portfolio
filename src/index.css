@@ -194,3 +194,25 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 2
   .stat-value { font-size: 2.4rem; }
   .contact .btn-gold { font-size: 0.85rem; }
 }
+
+/* ---------- Portrait ---------- */
+.name-row { display: flex; align-items: center; gap: 28px; }
+.portrait {
+  width: clamp(84px, 11vw, 132px); height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+  border: 2px solid rgba(214, 178, 106, 0.7); box-shadow: 0 0 0 6px rgba(214, 178, 106, 0.12), 0 20px 40px -20px rgba(0, 0, 0, 0.8);
+}
+@media (max-width: 600px) {
+  .name-row { flex-direction: column; align-items: flex-start; gap: 18px; }
+}
+
+/* ---------- Live demos ---------- */
+.demo { min-width: 0; }
+.demo-tag {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold);
+}
+.demo-tag .dot { width: 7px; height: 7px; border-radius: 50%; background: #58cc02; box-shadow: 0 0 0 3px rgba(88, 204, 2, 0.2); }
+.demo-loading {
+  min-height: 380px; display: grid; place-items: center; border-radius: 16px;
+  background: var(--navy-900); color: var(--muted); border: 1px solid var(--line);
+}

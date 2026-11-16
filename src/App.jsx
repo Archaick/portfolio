@@ -1,7 +1,25 @@
+import { Suspense, lazy } from 'react'
 import Hero from './Hero'
 import {
   education, experience, languages, partnerships, profile, projects, skills, smallBuilds,
 } from './content'
+
+const JisrQuiz = lazy(() => import('./demos/JisrQuiz'))
+const TadarusGlobe = lazy(() => import('./demos/TadarusGlobe'))
+const DEMOS = { quiz: JisrQuiz, globe: TadarusGlobe }
+
+function Demo({ p }) {
+  const Live = DEMOS[p.demo]
+  if (!Live) return <BrowserFrame host={p.host} name={p.name} />
+  return (
+    <div className="demo">
+      <p className="demo-tag"><span className="dot" aria-hidden="true" /> Try it — live sample</p>
+      <Suspense fallback={<div className="demo-loading">Loading {p.name}…</div>}>
+        <Live />
+      </Suspense>
+    </div>
+  )
+}
 
 function BrowserFrame({ host, name }) {
   // Placeholder until real (demo-data) screenshots are added.
@@ -49,7 +67,7 @@ function Project({ p, index }) {
           </a>
         )}
       </div>
-      <BrowserFrame host={p.host} name={p.name} />
+      <Demo p={p} />
     </article>
   )
 }

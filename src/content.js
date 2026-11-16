@@ -27,6 +27,7 @@ export const projects = [
       'Online payments and built-in accounting',
     ],
     stack: ['React', 'Firebase', 'JavaScript', 'Tailwind CSS'],
+    demo: 'quiz',
   },
   {
     id: 'tadarus',
@@ -45,6 +46,25 @@ export const projects = [
       'Audit history, recycle bin and “view as teacher” for admins',
     ],
     stack: ['React', 'Mantine', 'Firebase', 'PWA'],
+  },
+  {
+    id: 'global',
+    flag: 'Markaz Tadarus Indonesia',
+    name: 'Tadarus Global',
+    tagline: 'Every country running Tadarus, on one living globe',
+    url: 'https://markaztadarus.com/global',
+    host: 'markaztadarus.com/global',
+    stat: null,
+    problem:
+      'Partners and donors needed to see at a glance where Tadarus reaches — and that it all traces back to Makkah.',
+    built: [
+      'A globe drawn from map data, turned by drag, pinch or scroll',
+      'Programme countries lit in gold and joined to Makkah by a line of light',
+      'Real-time day and night, the true Sun and Moon, and live session markers',
+      'Close up, Indonesia’s provinces with their programme counts',
+    ],
+    stack: ['React', 'd3-geo', 'TopoJSON', 'Firebase'],
+    demo: 'globe',
   },
   {
     id: 'hijaz',
@@ -69,8 +89,8 @@ export const smallBuilds = [
     text: 'Hundreds of certificates from one Excel file — each with a QR code for public online verification, signatures, stamps and print-ready PDFs.',
   },
   {
-    name: 'Tadarus Global',
-    text: 'An interactive 3D globe of every country running Tadarus programmes, with live session markers.',
+    name: 'Belajar 5T recitation player',
+    text: 'Qur’an recitation ayah by ayah with the current ayah highlighted live, and a choice of reciters.',
   },
 ]
 
