@@ -1,15 +1,16 @@
 // Sky colours for the hero, following the local time in Jakarta (WIB, UTC+7).
+// The stars never go out completely: softer by day, full at night.
 // Keyframes are minutes since midnight; colours are blended between them.
 
 const KEYFRAMES = [
   { m: 0,    top: '#040917', mid: '#0a1530', low: '#132443', stars: 1,    glow: 0.05 },
   { m: 270,  top: '#040917', mid: '#0a1530', low: '#132443', stars: 1,    glow: 0.05 }, // 04:30
   { m: 300,  top: '#08122b', mid: '#18284d', low: '#3a3c62', stars: 0.8,  glow: 0.25 }, // 05:00 subuh
-  { m: 345,  top: '#152a55', mid: '#43578a', low: '#c48a58', stars: 0.3,  glow: 0.85 }, // 05:45 dawn
-  { m: 400,  top: '#1d4675', mid: '#456f9b', low: '#cfa978', stars: 0,    glow: 0.5  }, // 06:40
-  { m: 600,  top: '#173f6b', mid: '#33628e', low: '#6f94b6', stars: 0,    glow: 0.12 }, // 10:00
-  { m: 1010, top: '#173f6b', mid: '#33628e', low: '#6f94b6', stars: 0,    glow: 0.12 }, // 16:50
-  { m: 1070, top: '#16284f', mid: '#544774', low: '#c27c4c', stars: 0.25, glow: 0.85 }, // 17:50 maghrib
+  { m: 345,  top: '#152a55', mid: '#43578a', low: '#c48a58', stars: 0.75, glow: 0.85 }, // 05:45 dawn
+  { m: 400,  top: '#1d4675', mid: '#456f9b', low: '#cfa978', stars: 0.6, glow: 0.5  }, // 06:40
+  { m: 600,  top: '#173f6b', mid: '#33628e', low: '#6f94b6', stars: 0.55, glow: 0.12 }, // 10:00
+  { m: 1010, top: '#173f6b', mid: '#33628e', low: '#6f94b6', stars: 0.55, glow: 0.12 }, // 16:50
+  { m: 1070, top: '#16284f', mid: '#544774', low: '#c27c4c', stars: 0.75, glow: 0.85 }, // 17:50 maghrib
   { m: 1130, top: '#070f28', mid: '#122049', low: '#2b3460', stars: 0.85, glow: 0.2  }, // 18:50
   { m: 1200, top: '#040917', mid: '#0a1530', low: '#132443', stars: 1,    glow: 0.05 }, // 20:00
   { m: 1440, top: '#040917', mid: '#0a1530', low: '#132443', stars: 1,    glow: 0.05 },
