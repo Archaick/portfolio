@@ -206,9 +206,9 @@ export default function App() {
             <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             <a className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
           </div>
+          <p className="sign-off">© {new Date().getFullYear()} {profile.name} · Jakarta, Indonesia</p>
         </section>
       </main>
-      <footer>© {new Date().getFullYear()} {profile.name} · Jakarta, Indonesia</footer>
     </>
   )
 }

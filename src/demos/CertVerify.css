@@ -1,8 +1,8 @@
 /* The certificate-verification scene: a printed certificate and a phone that scans it. */
 .cv {
   position: relative; height: clamp(320px, 34vw, 400px); border-radius: 16px; overflow: hidden;
-  background: radial-gradient(ellipse at 30% 30%, #1b2a52, #0a1430 70%);
-  border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+  background: radial-gradient(ellipse at 30% 30%, rgba(41, 60, 110, 0.55), rgba(10, 20, 48, 0.5) 70%), var(--glass);
+  border: 1px solid var(--glass-border); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
   font-family: var(--sans);
 }
 .cv p { margin: 0; }

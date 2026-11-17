@@ -1,6 +1,7 @@
 .tg {
-  border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);
-  background: radial-gradient(ellipse at 50% 40%, #0f1f45, #070e22 75%);
+  border-radius: 18px; overflow: hidden; border: 1px solid var(--glass-border);
+  background: radial-gradient(ellipse at 50% 40%, rgba(21, 42, 85, 0.55), rgba(7, 14, 34, 0.45) 75%), var(--glass);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
 }
 .tg-box {
@@ -37,7 +38,7 @@
 
 .tg-info {
   margin: 0 12px; padding: 8px 14px; border-radius: 10px; min-height: 52px;
-  background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06); border: 1px solid var(--glass-border);
   display: flex; flex-direction: column; justify-content: center; gap: 2px; font-size: 0.9rem; color: var(--muted);
 }
 .tg-info strong { color: #fff; font-size: 1rem; }

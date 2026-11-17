@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { STARS, jakartaMinutes, skyAt } from './sky'
+import { STARS, skyAt } from './sky'
 import { profile } from './content'
 import portrait from './assets/saeed.webp'
 import FallIntro from './FallIntro'
@@ -12,18 +12,16 @@ function overrideMinutes() {
   return m ? (Number(m[1]) % 24) * 60 + (Number(m[2]) % 60) : null
 }
 
-function useJakartaTime() {
-  const [minutes, setMinutes] = useState(() => overrideMinutes() ?? jakartaMinutes())
-  useEffect(() => {
-    if (overrideMinutes() !== null) return
-    const id = setInterval(() => setMinutes(jakartaMinutes()), 30_000)
-    return () => clearInterval(id)
-  }, [])
+// The hero is always dawn (05:45): the page opens at sunrise and closes on the same horizon.
+const DAWN = 345
+
+function useSkyMinutes() {
+  const [minutes] = useState(() => overrideMinutes() ?? DAWN)
   return minutes
 }
 
 export default function Hero() {
-  const minutes = useJakartaTime()
+  const minutes = useSkyMinutes()
   const sky = skyAt(minutes)
   // 'fall' (the opening plays) → 'land' (the hero settles in) → 'still'
   const [phase, setPhase] = useState(() => (shouldPlayIntro() ? 'fall' : 'still'))
@@ -34,6 +32,7 @@ export default function Hero() {
   }, [phase])
 
   return (
+    <>
     <header
       className={`hero is-${phase}`}
       style={{
@@ -90,7 +89,8 @@ export default function Hero() {
       </div>
 
       <a className="scroll-hint" href="#work">See the work ↓</a>
-      {phase === 'fall' && <FallIntro skyTop={sky.top} skyMid={sky.mid} skyLow={sky.low} glow={sky.glow} gentle={gentleIntro()} onDone={() => setPhase('land')} />}
     </header>
+    {phase === 'fall' && <FallIntro skyTop={sky.top} skyMid={sky.mid} skyLow={sky.low} glow={sky.glow} gentle={gentleIntro()} onDone={() => setPhase('land')} />}
+    </>
   )
 }
