@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect } from 'react'
 import Hero from './Hero'
+import DustField from './DustField'
 import {
   education, experience, languages, partnerships, profile, projects, skills, smallBuilds,
 } from './content'
@@ -78,7 +79,7 @@ function Project({ p, index }) {
           {p.stack.map((s) => <li key={s}>{s}</li>)}
         </ul>
         {p.url && (
-          <a className="btn btn-gold" href={p.url} target="_blank" rel="noreferrer">
+          <a className="btn btn-light" href={p.url} target="_blank" rel="noreferrer">
             Visit live ↗
           </a>
         )}
@@ -118,6 +119,9 @@ export default function App() {
   useReveal()
   return (
     <>
+      <div className="page-dust" aria-hidden="true">
+        <DustField beam={{ from: [0.95, -0.2], to: [0.2, 1.2] }} density={0.55} beamStrength={10} />
+      </div>
       <Hero />
       <main>
         <section id="work" className="section">
@@ -197,12 +201,13 @@ export default function App() {
         </section>
 
         <section id="contact" className="section contact">
+          <div className="closing-room" aria-hidden="true" />
           <h2>Let’s build something that teaches</h2>
           <p className="section-lede">
             Open to projects, partnerships and institutions working in education.
           </p>
           <div className="actions center">
-            <a className="btn btn-gold" href={`mailto:${profile.email}`}>{profile.email}</a>
+            <a className="btn btn-light" href={`mailto:${profile.email}`}>{profile.email}</a>
             <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             <a className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
           </div>

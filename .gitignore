@@ -30,3 +30,6 @@ firebase-debug.log
 # env
 .env
 .env.local
+
+# private job application documents
+applications/

@@ -1,96 +1,57 @@
-import { useEffect, useState } from 'react'
-import { STARS, skyAt } from './sky'
+import { useRef, useState } from 'react'
 import { profile } from './content'
 import portrait from './assets/saeed.webp'
-import FallIntro from './FallIntro'
-import { gentleIntro, shouldPlayIntro } from './intro'
+import DustField from './DustField'
+import { shouldPlayIntro } from './intro'
 
-// ?t=05:40 in the URL previews the sky at a given Jakarta time.
-function overrideMinutes() {
-  const t = new URLSearchParams(window.location.search).get('t')
-  const m = t && /^(\d{1,2}):(\d{2})$/.exec(t)
-  return m ? (Number(m[1]) % 24) * 60 + (Number(m[2]) % 60) : null
-}
-
-// The hero is always dawn (05:45): the page opens at sunrise and closes on the same horizon.
-const DAWN = 345
-
-function useSkyMinutes() {
-  const [minutes] = useState(() => overrideMinutes() ?? DAWN)
-  return minutes
-}
-
+// The opening: a dark room, a beam of light switches on, and the dust floating in it
+// gathers into the headline before the real (glass) text appears. Esc skips it;
+// ?intro=0 turns it off; reduced motion shows the finished page straight away.
 export default function Hero() {
-  const minutes = useSkyMinutes()
-  const sky = skyAt(minutes)
-  // 'fall' (the opening plays) → 'land' (the hero settles in) → 'still'
-  const [phase, setPhase] = useState(() => (shouldPlayIntro() ? 'fall' : 'still'))
-  useEffect(() => {
-    if (phase !== 'land') return undefined
-    const id = setTimeout(() => setPhase('still'), 1400)
-    return () => clearTimeout(id)
-  }, [phase])
+  const headline = useRef(null)
+  const [phase, setPhase] = useState(() => (shouldPlayIntro() ? 'gather' : 'still'))
+  const [progress, setProgress] = useState(0)
 
   return (
-    <>
-    <header
-      className={`hero is-${phase}`}
-      style={{
-        '--sky-top': sky.top,
-        '--sky-mid': sky.mid,
-        '--sky-low': sky.low,
-        '--glow': sky.glow,
-      }}
-    >
-      <svg className="stars" aria-hidden="true" opacity={sky.stars}>
-        <defs>
-          <linearGradient id="glint-h">
-            <stop offset="0" stopColor="#fff8e1" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#fff8e1" stopOpacity="0.7" />
-            <stop offset="1" stopColor="#fff8e1" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="glint-v" x2="0" y2="1">
-            <stop offset="0" stopColor="#fff8e1" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#fff8e1" stopOpacity="0.7" />
-            <stop offset="1" stopColor="#fff8e1" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {STARS.map((s, i) => {
-          const style = s.shimmer
-            ? { '--o': s.o, animationDuration: `${s.dur}s`, animationDelay: `${s.delay}s` }
-            : undefined
-          return (
-            <g key={i} className={s.shimmer ? 'star shimmer' : 'star'} style={style} opacity={s.shimmer ? undefined : s.o}>
-              {s.glint && (
-                <>
-                  <rect x={`${s.x}%`} y={`${s.y}%`} width="14" height="0.8" transform="translate(-7 -0.4)" fill="url(#glint-h)" />
-                  <rect x={`${s.x}%`} y={`${s.y}%`} width="0.8" height="14" transform="translate(-0.4 -7)" fill="url(#glint-v)" />
-                </>
-              )}
-              <circle cx={`${s.x}%`} cy={`${s.y}%`} r={s.r} fill="#fff" />
-            </g>
-          )
-        })}
-      </svg>
-      <div className="horizon" aria-hidden="true" />
+    <header className={`hero is-${phase}`}>
+      <div className="beam-source" aria-hidden="true" />
+      <DustField
+        gather={phase === 'gather' ? headline : null}
+        onProgress={setProgress}
+        onReveal={() => setPhase('reveal')}
+        onDone={() => setPhase('still')}
+      />
 
       <div className="hero-inner">
-        <div className="name-row">
+        <p className="hero-meta">
           <img className="portrait" src={portrait} alt={profile.name} width="160" height="160" />
-          <h1>{profile.name}</h1>
-        </div>
-        <p className="lede">{profile.line}</p>
+          <span>
+            <strong>{profile.name}</strong>
+            <em>Founder-developer · Jakarta</em>
+          </span>
+        </p>
+
+        <h1 className="mega" ref={headline}>
+          <span data-line>{profile.headline[0]}</span>
+          <span data-line className="dim">{profile.headline[1]}</span>
+        </h1>
+
         <p className="sub">{profile.sub}</p>
         <div className="actions">
-          <a className="btn btn-gold" href={`mailto:${profile.email}`}>Email me</a>
+          <a className="btn btn-light" href={`mailto:${profile.email}`}>Email me</a>
           <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
           <a className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
         </div>
       </div>
 
       <a className="scroll-hint" href="#work">See the work ↓</a>
+
+      {phase === 'gather' && (
+        <div className="loading" role="progressbar" aria-label="Loading" aria-valuenow={Math.round(progress * 100)}>
+          <div className="loading-bar"><i style={{ transform: `scaleX(${progress})` }} /></div>
+          <span>Loading <em>{Math.round(progress * 100)}%</em></span>
+        </div>
+      )}
     </header>
-    {phase === 'fall' && <FallIntro skyTop={sky.top} skyMid={sky.mid} skyLow={sky.low} glow={sky.glow} gentle={gentleIntro()} onDone={() => setPhase('land')} />}
-    </>
   )
 }

@@ -4,6 +4,7 @@
 export const profile = {
   name: 'Saeed J. Hareez',
   line: 'Founder-developer building learning platforms that connect Saudi Arabia and Indonesia.',
+  headline: ['I build learning platforms.', 'From Saudi Arabia to Indonesia.'],
   sub: 'Co-founder of JISR · Web developer & international coordinator at Markaz Tadarus · Jakarta, Indonesia',
   email: 'saeedhareez@gmail.com',
   linkedin: 'https://www.linkedin.com/in/saeed-hareez-398685288',
