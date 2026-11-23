@@ -15,6 +15,7 @@ export default function Hero() {
   return (
     <header className={`hero is-${phase}`}>
       <div className="beam-source" aria-hidden="true" />
+      <div className="planet" aria-hidden="true" />
       <DustField
         gather={phase === 'gather' ? headline : null}
         onProgress={setProgress}
