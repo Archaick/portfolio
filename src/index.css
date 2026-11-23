@@ -304,3 +304,15 @@ main { padding: 0 20px; }
   .reveal { transform: none; transition: opacity 0.6s ease; }
   .hero.is-reveal .mega span, .hero.is-reveal .hero-meta, .hero.is-reveal .sub, .hero.is-reveal .actions { animation: none; }
 }
+
+/* ---------- Spotlight: the project being read is lit, the rest of the room dims ---------- */
+.project { transition: opacity 0.8s ease, filter 0.8s ease; }
+main.spot .project:not(.lit) { opacity: 0.38; filter: saturate(0.6); }
+@media (max-width: 860px) { main.spot .project:not(.lit) { opacity: 0.55; } }
+
+/* ---------- Titles that form out of dust ---------- */
+main h2.dust-wait { opacity: 0; }
+main h2.dust-in { animation: glass-in 0.8s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  main.spot .project:not(.lit) { opacity: 1; filter: none; }
+}

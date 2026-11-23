@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react'
+import { Suspense, lazy, useEffect, useRef } from 'react'
 import Hero from './Hero'
 import DustField from './DustField'
 import {
@@ -90,7 +90,7 @@ function Project({ p, index }) {
 }
 
 // Each block below the hero rises gently into view the first time it is scrolled to.
-const REVEAL = 'main h2, main .section-lede, .project-text, .project > .demo, .project > .frame, .partners li, .two-col > div, .contact .actions'
+const REVEAL = 'main .section-lede, .project-text, .project > .demo, .project > .frame, .partners li, .two-col > div, .contact .actions'
 
 function useReveal() {
   useEffect(() => {
@@ -115,12 +115,103 @@ function useReveal() {
   }, [])
 }
 
+const ROOM_BEAM = { from: [0.95, -0.2], to: [0.2, 1.2], strength: 10 }
+
+// The beam swings to light whichever project is in the middle of the screen; the others dim.
+function useSpotlight(steer) {
+  useEffect(() => {
+    const projects = [...document.querySelectorAll('.project')]
+    const main = document.querySelector('main')
+    let raf = 0
+    let lit = null
+    const update = () => {
+      raf = 0
+      const vh = innerHeight
+      const vw = innerWidth
+      let best = null
+      let bestD = Infinity
+      for (const el of projects) {
+        const r = el.getBoundingClientRect()
+        if (r.bottom < vh * 0.2 || r.top > vh * 0.8) continue
+        const d = Math.abs(r.top + r.height / 2 - vh / 2)
+        if (d < bestD) {
+          bestD = d
+          best = el
+        }
+      }
+      if (best !== lit) {
+        lit?.classList.remove('lit')
+        best?.classList.add('lit')
+        main.classList.toggle('spot', !!best)
+        lit = best
+      }
+      if (!best) {
+        steer.current = ROOM_BEAM
+        return
+      }
+      // aim at the live demo when there is one, else the whole card
+      const target = best.querySelector('.demo, .frame') || best
+      const r = target.getBoundingClientRect()
+      const cx = (r.left + r.width / 2) / vw
+      const cy = Math.min(0.85, Math.max(0.2, (r.top + r.height / 2) / vh))
+      const fx = cx > 0.5 ? Math.min(1.05, cx + 0.3) : Math.max(-0.05, cx - 0.3)
+      const from = [fx, -0.25]
+      steer.current = { from, to: [cx + (cx - fx) * 0.5, cy + (cy - from[1]) * 0.5], strength: 46 }
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [steer])
+}
+
+// Each section title forms out of dust the first time it scrolls into view.
+function useDustTitles(dust) {
+  useEffect(() => {
+    const still = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (still || !('IntersectionObserver' in window)) return undefined
+    const titles = [...document.querySelectorAll('main h2')]
+    titles.forEach((h) => h.classList.add('dust-wait'))
+    const show = (h) => {
+      h.classList.remove('dust-wait')
+      h.classList.add('dust-in')
+    }
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (!e.isIntersecting) return
+        const h = e.target
+        io.unobserve(h)
+        const safety = setTimeout(() => show(h), 2500) // never leave a title hidden
+        const run = dust.current?.gatherInto(h) ?? Promise.resolve()
+        run.then(() => {
+          clearTimeout(safety)
+          show(h)
+        })
+      }),
+      { rootMargin: '0px 0px -15% 0px', threshold: 0.6 },
+    )
+    titles.forEach((h) => io.observe(h))
+    return () => io.disconnect()
+  }, [dust])
+}
+
 export default function App() {
+  const steer = useRef(ROOM_BEAM)
+  const dust = useRef(null)
   useReveal()
+  useSpotlight(steer)
+  useDustTitles(dust)
   return (
     <>
       <div className="page-dust" aria-hidden="true">
-        <DustField beam={{ from: [0.95, -0.2], to: [0.2, 1.2] }} density={0.55} beamStrength={10} />
+        <DustField beam={ROOM_BEAM} density={0.55} beamStrength={10} steer={steer} api={dust} />
       </div>
       <Hero />
       <main>

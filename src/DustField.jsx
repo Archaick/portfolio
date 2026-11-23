@@ -6,12 +6,18 @@ import { useEffect, useRef } from 'react'
 // - With `gather` (a ref to an element holding [data-line] spans), the dust first gathers
 //   into those lines of text, then `onReveal` lets the real text fade in and the gathered
 //   dust drifts apart. `onProgress(0..1)` drives a loading line; it waits for the fonts.
+// - `steer` (a ref holding { from, to, strength }) moves the beam smoothly, e.g. to spotlight
+//   whatever the visitor is reading.
+// - `api` (a ref) receives { gatherInto(el) }: dust gathers into that element's text and the
+//   returned promise resolves when the real text should appear. Used for section titles.
 // Still (no motion) for visitors who ask for reduced motion.
 
 const TAU = Math.PI * 2
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 const GATHER_MS = 1900
 const RELEASE_MS = 900
+const TITLE_MS = 1150
+const lerp = (a, b, k) => a + (b - a) * k
 
 export default function DustField({
   className = '',
@@ -19,6 +25,8 @@ export default function DustField({
   density = 1,
   beamStrength = 34,
   gather = null,
+  steer = null,
+  api = null,
   onProgress,
   onReveal,
   onDone,
@@ -35,14 +43,14 @@ export default function DustField({
     let dpr = 1
     let beamImg = null
     let dust = []
-    let gathered = [] // particles flying to text points
     let frame = 0
     let visible = true
     const pointer = { x: -1e4, y: -1e4, on: false }
 
     // ---- the beam: brightness 0..1 at (x, y); widens with distance from the source
-    const S = () => [beam.from[0] * W, beam.from[1] * H]
-    const E = () => [beam.to[0] * W, beam.to[1] * H]
+    const cur = { from: [...beam.from], to: [...beam.to], strength: beamStrength }
+    const S = () => [cur.from[0] * W, cur.from[1] * H]
+    const E = () => [cur.to[0] * W, cur.to[1] * H]
     const beamAt = (x, y) => {
       const [sx, sy] = S()
       const [ex, ey] = E()
@@ -76,11 +84,33 @@ export default function DustField({
           img.data[i] = 255
           img.data[i + 1] = 244
           img.data[i + 2] = 226
-          img.data[i + 3] = Math.round(v * beamStrength)
+          img.data[i + 3] = Math.round(v * cur.strength)
         }
       }
       octx.putImageData(img, 0, 0)
       beamImg = off
+    }
+    // ease the beam toward where `steer` points; repaint only while it is moving
+    let repaintAt = 0
+    const steerBeam = (now) => {
+      const t = steer?.current
+      if (!t) return
+      const k = 0.06
+      let moved = 0
+      for (const key of ['from', 'to']) {
+        for (const i of [0, 1]) {
+          const nv = lerp(cur[key][i], t[key][i], k)
+          moved += Math.abs(nv - cur[key][i])
+          cur[key][i] = nv
+        }
+      }
+      const ns = lerp(cur.strength, t.strength ?? beamStrength, k)
+      moved += Math.abs(ns - cur.strength) / 100
+      cur.strength = ns
+      if (moved > 0.0004 && now - repaintAt > 32) {
+        repaintAt = now
+        paintBeam()
+      }
     }
 
     const makeDust = () => {
@@ -142,14 +172,12 @@ export default function DustField({
     window.addEventListener('touchend', leave)
 
     // ---- gathering into the headline
-    let gatherStart = 0
-    let revealed = false
-    let released = 0
     let finished = !gather
 
-    const sampleText = () => {
-      const lines = gather?.current ? [...gather.current.querySelectorAll('[data-line]')] : []
-      if (!lines.length) return []
+    const sampleText = (root, cap) => {
+      if (!root) return []
+      const found = [...root.querySelectorAll('[data-line]')]
+      const lines = found.length ? found : [root]
       const hr = host.getBoundingClientRect()
       const off = document.createElement('canvas')
       off.width = Math.ceil(W)
@@ -192,18 +220,46 @@ export default function DustField({
         const j = Math.floor(Math.random() * (i + 1))
         ;[pts[i], pts[j]] = [pts[j], pts[i]]
       }
-      return pts.slice(0, W < 700 ? 750 : 1700)
+      return pts.slice(0, cap ?? (W < 700 ? 750 : 1700))
     }
 
-    const startGather = () => {
-      const pts = sampleText()
-      gathered = pts.map(([tx, ty]) => {
-        // they rise out of the beam, from anywhere in the room
-        const sx = Math.random() * W
-        const sy = Math.random() * H
-        return { sx, sy, tx, ty, d: Math.random() * 0.45, wob: (Math.random() - 0.5) * 120, x: sx, y: sy, a: 0 }
+    // a gathering job: dust flies to points sampled from an element, then lifts off when it reveals
+    const jobs = []
+    const makeJob = (el, { cap, ms, near, onShow, onEnd, progress }) => {
+      const r0 = el.getBoundingClientRect()
+      const pts = sampleText(el, cap)
+      const parts = pts.map(([tx, ty]) => {
+        // from anywhere in the room, or from around the title for small ones
+        const sx = near ? tx + (Math.random() - 0.5) * W * 0.7 : Math.random() * W
+        const sy = near ? ty + (Math.random() - 0.5) * H * 0.6 : Math.random() * H
+        return { sx, sy, tx, ty, d: Math.random() * 0.45, wob: (Math.random() - 0.5) * 120 }
       })
-      gatherStart = performance.now()
+      const job = { el, r0, parts, ms, start: performance.now(), revealed: false, released: 0, onShow, onEnd, progress }
+      jobs.push(job)
+      return job
+    }
+    const startGather = () => {
+      makeJob(gather.current, {
+        ms: GATHER_MS,
+        progress: true,
+        onShow: () => onReveal?.(),
+        onEnd: () => {
+          if (!finished) {
+            finished = true
+            onDone?.()
+          }
+        },
+      })
+    }
+    if (api) {
+      api.current = {
+        gatherInto: (el) =>
+          new Promise((resolve) => {
+            if (still) return resolve()
+            const job = makeJob(el, { cap: W < 700 ? 320 : 650, ms: TITLE_MS, near: true, onShow: resolve })
+            if (!job.parts.length) resolve()
+          }),
+      }
     }
 
     // ---- one loop
@@ -211,6 +267,7 @@ export default function DustField({
     const draw = (now) => {
       const dt = Math.min(48, now - last) / 16.67
       last = now
+      steerBeam(now)
       ctx.clearRect(0, 0, W, H)
       if (beamImg) ctx.drawImage(beamImg, 0, 0, W, H)
 
@@ -250,24 +307,29 @@ export default function DustField({
         ctx.fill()
       }
 
-      if (gathered.length) {
-        const t = (now - gatherStart) / GATHER_MS
-        onProgress?.(Math.min(1, 0.15 + Math.max(0, t) * 0.85))
-        if (t >= 1 && !revealed) {
-          revealed = true
-          released = now
-          onReveal?.()
+      for (let j = jobs.length - 1; j >= 0; j--) {
+        const job = jobs[j]
+        const t = (now - job.start) / job.ms
+        if (job.progress) onProgress?.(Math.min(1, 0.15 + Math.max(0, t) * 0.85))
+        if (t >= 1 && !job.revealed) {
+          job.revealed = true
+          job.released = now
+          job.onShow?.()
         }
-        const fade = revealed ? 1 - Math.min(1, (now - released) / RELEASE_MS) : 1
+        const fade = job.revealed ? 1 - Math.min(1, (now - job.released) / RELEASE_MS) : 1
+        // follow the element if the page scrolls while the dust is gathering
+        const r = job.el.getBoundingClientRect()
+        const ox = r.left - job.r0.left
+        const oy = r.top - job.r0.top
         ctx.fillStyle = '#fff'
-        for (const g of gathered) {
+        for (const g of job.parts) {
           const k = Math.min(1, Math.max(0, (t - g.d) / (1 - g.d)))
           const e = ease(k)
           // a gentle curve on the way in
           const curve = Math.sin(e * Math.PI) * g.wob
-          let x = g.sx + (g.tx - g.sx) * e + curve * 0.3
-          let y = g.sy + (g.ty - g.sy) * e - curve * 0.15
-          if (revealed) {
+          let x = g.sx + (g.tx + ox - g.sx) * e + curve * 0.3
+          let y = g.sy + (g.ty + oy - g.sy) * e - curve * 0.15
+          if (job.revealed) {
             // once the text is there, the dust lifts off it softly
             const lift = 1 - fade
             x += Math.sin(g.wob) * 18 * lift
@@ -279,12 +341,9 @@ export default function DustField({
           ctx.fillRect(x - 0.8, y - 0.8, 1.6, 1.6)
         }
         ctx.globalAlpha = 1
-        if (revealed && fade <= 0) {
-          gathered = []
-          if (!finished) {
-            finished = true
-            onDone?.()
-          }
+        if (job.revealed && fade <= 0) {
+          jobs.splice(j, 1)
+          job.onEnd?.()
         }
       }
       if (!still && visible) frame = requestAnimationFrame(draw)
@@ -326,7 +385,7 @@ export default function DustField({
 
     // Esc skips the gathering
     const skip = (e) => {
-      if (e.key === 'Escape' && gathered.length && !revealed) gatherStart = performance.now() - GATHER_MS
+      if (e.key === 'Escape') for (const job of jobs) if (!job.revealed) job.start = performance.now() - job.ms
     }
     window.addEventListener('keydown', skip)
 
