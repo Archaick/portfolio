@@ -2,13 +2,13 @@
    A near-black room, one beam of warm light, dust in the air; silver glass text and
    frosted dark glass panels. The warm light colour is the only accent. */
 :root {
-  --bg: #07080b;
-  --bg-2: #0c0e13;
+  --bg: #04050c; /* deep space: black with a hint of blue */
+  --bg-2: #0a0c18;
   --text: #e9ebf0;
   --muted: #8f96a5;
   --line: rgba(255, 255, 255, 0.08);
-  --light: #f3e7cf; /* the beam's warm light */
-  --light-dim: rgba(243, 231, 207, 0.55);
+  --light: #dfe7ff; /* starlight: cool, pale blue-white */
+  --light-dim: rgba(205, 216, 255, 0.6);
   --gold: var(--light); /* older names still used by the demos */
   --gold-soft: var(--light);
   --sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -19,8 +19,8 @@
   --glass-blur: blur(20px) saturate(140%);
   --glass-shadow: 0 30px 70px -35px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   /* silver glass text: a bright top fading to grey, with a soft sheen that follows the cursor */
-  --silver: linear-gradient(180deg, #ffffff 0%, #e7e9ee 38%, #9ba2b0 100%);
-  --silver-dim: linear-gradient(180deg, #a5abb8 0%, #6c7280 100%);
+  --silver: linear-gradient(180deg, #ffffff 0%, #e6eaf5 38%, #98a2bd 100%);
+  --silver-dim: linear-gradient(180deg, #a3acc4 0%, #646d88 100%);
   color-scheme: dark;
 }
 
@@ -41,12 +41,15 @@ body {
   overflow-x: hidden;
 }
 /* faint light falling across the whole room, so the glass below the hero has something to catch */
+/* nebula: a few barely visible glows, far behind the stars */
 body::before {
-  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  content: ''; position: fixed; inset: 0; z-index: -3; pointer-events: none;
   background:
-    radial-gradient(900px 700px at 85% -10%, rgba(243, 231, 207, 0.07), transparent 70%),
-    radial-gradient(800px 600px at 0% 60%, rgba(150, 165, 200, 0.05), transparent 70%);
+    radial-gradient(900px 620px at 82% 12%, rgba(120, 96, 200, 0.12), transparent 70%),
+    radial-gradient(760px 560px at 8% 64%, rgba(60, 110, 200, 0.10), transparent 70%),
+    radial-gradient(640px 480px at 60% 108%, rgba(170, 90, 160, 0.07), transparent 70%);
 }
+.stars-bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
 
 h1, h2, h3 { font-family: var(--sans); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin: 0; }
 h2 {
@@ -92,16 +95,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero {
   position: relative; min-height: 100svh; display: flex; flex-direction: column;
   justify-content: center; overflow: hidden; padding: min(96px, 10svh) 20px min(80px, 9svh);
-  background: radial-gradient(1200px 800px at 80% -10%, #15161b 0%, var(--bg) 60%);
+  background: transparent;
 }
 /* where the light comes in, top right */
 .beam-source {
   position: absolute; right: -12%; top: -30%; width: 70vmax; height: 70vmax; pointer-events: none;
-  background: radial-gradient(circle, rgba(243, 231, 207, 0.12), transparent 60%);
-}
-.hero::after {
-  content: ''; position: absolute; inset: auto 0 0 0; height: 160px; pointer-events: none;
-  background: linear-gradient(180deg, transparent, var(--bg));
+  background: radial-gradient(circle, rgba(200, 214, 255, 0.10), transparent 60%);
 }
 .hero-inner { position: relative; z-index: 1; width: 100%; max-width: var(--wrap); margin: 0 auto; }
 
@@ -157,7 +156,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: grid; justify-items: center; gap: 10px; width: min(220px, 60vw); }
 .loading-bar { width: 100%; height: 1px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
 .loading-bar i { display: block; height: 100%; background: var(--light); transform-origin: left; transform: scaleX(0);
-  box-shadow: 0 0 10px rgba(243, 231, 207, 0.8); transition: transform 0.2s linear; }
+  box-shadow: 0 0 10px rgba(205, 216, 255, 0.8); transition: transform 0.2s linear; }
 .loading span { font: 500 0.7rem var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: rgba(233, 235, 240, 0.55); }
 .loading em { font-style: normal; color: var(--light); letter-spacing: 0.08em; }
 
@@ -189,7 +188,7 @@ main { padding: 0 20px; }
 .ticks li { position: relative; padding-left: 22px; margin: 6px 0; color: #c4c9d3; }
 .ticks li::before {
   content: ''; position: absolute; left: 3px; top: 0.72em; width: 6px; height: 6px;
-  border-radius: 50%; background: var(--light); box-shadow: 0 0 8px rgba(243, 231, 207, 0.6);
+  border-radius: 50%; background: var(--light); box-shadow: 0 0 8px rgba(205, 216, 255, 0.6);
 }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 26px; }
 .chips li {
@@ -237,7 +236,7 @@ main { padding: 0 20px; }
 .partner small { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
 .link { position: relative; height: 76px; display: grid; place-items: center; }
 .link::before { content: ''; position: absolute; left: -6px; right: -6px; top: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--light), transparent); }
-.link i { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--light); box-shadow: 0 0 12px rgba(243, 231, 207, 0.9); }
+.link i { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--light); box-shadow: 0 0 12px rgba(205, 216, 255, 0.9); }
 .partners .kind {
   font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--light-dim);
   padding: 4px 12px; border-radius: 999px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.03);
@@ -247,7 +246,7 @@ main { padding: 0 20px; }
 .two-col { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; }
 .two-col h2 { margin-bottom: 24px; font-size: clamp(1.9rem, 4vw, 2.6rem); }
 .timeline li { display: grid; gap: 2px; padding: 0 0 22px 20px; border-left: 1px solid var(--line); position: relative; }
-.timeline li::before { content: ''; position: absolute; left: -3px; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: var(--light); box-shadow: 0 0 8px rgba(243, 231, 207, 0.7); }
+.timeline li::before { content: ''; position: absolute; left: -3px; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: var(--light); box-shadow: 0 0 8px rgba(205, 216, 255, 0.7); }
 .timeline .when { font-size: 0.78rem; color: var(--light-dim); letter-spacing: 0.04em; }
 .timeline strong { color: #fff; font-weight: 600; }
 .timeline span { color: #c4c9d3; }
@@ -258,7 +257,7 @@ main { padding: 0 20px; }
 /* Closing: the same dark room and beam, from above */
 .contact { position: relative; text-align: center; padding: 170px 20px 40px; margin-top: 80px; }
 .closing-room { position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; overflow: hidden;
-  background: radial-gradient(900px 600px at 50% -20%, rgba(243, 231, 207, 0.09), transparent 70%);
+  background: radial-gradient(900px 600px at 50% -20%, rgba(200, 214, 255, 0.07), transparent 70%);
   /* fades in from the page above, so the room has no top edge */
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 38%);
   mask-image: linear-gradient(180deg, transparent 0%, #000 38%); }

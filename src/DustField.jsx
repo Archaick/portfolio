@@ -24,6 +24,7 @@ export default function DustField({
   beam = { from: [0.92, -0.15], to: [0.28, 1.1] },
   density = 1,
   beamStrength = 34,
+  tint = [220, 230, 255], // starlight: a cool, pale blue-white
   gather = null,
   steer = null,
   api = null,
@@ -81,9 +82,9 @@ export default function DustField({
         for (let x = 0; x < bw; x++) {
           const v = beamAt(x * s, y * s)
           const i = (y * bw + x) * 4
-          img.data[i] = 255
-          img.data[i + 1] = 244
-          img.data[i + 2] = 226
+          img.data[i] = tint[0]
+          img.data[i + 1] = tint[1]
+          img.data[i + 2] = tint[2]
           img.data[i + 3] = Math.round(v * cur.strength)
         }
       }
@@ -301,7 +302,7 @@ export default function DustField({
         const tw = 0.65 + 0.35 * Math.sin(p.ph * 3)
         const a = Math.min(1, (0.06 + 0.8 * b) * tw * p.z + glow * 0.55)
         if (a < 0.02) continue
-        ctx.fillStyle = `rgba(255,246,232,${a.toFixed(3)})`
+        ctx.fillStyle = `rgba(${tint[0]},${tint[1]},${tint[2]},${a.toFixed(3)})`
         ctx.beginPath()
         ctx.arc(p.x, p.y, 0.45 + 1.3 * p.z + glow, 0, TAU)
         ctx.fill()

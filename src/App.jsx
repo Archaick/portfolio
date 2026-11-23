@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useRef } from 'react'
 import Hero from './Hero'
 import DustField from './DustField'
+import StarField from './StarField'
 import {
   education, experience, languages, partnerships, profile, projects, skills, smallBuilds,
 } from './content'
@@ -210,6 +211,7 @@ export default function App() {
   useDustTitles(dust)
   return (
     <>
+      <StarField />
       <div className="page-dust" aria-hidden="true">
         <DustField beam={ROOM_BEAM} density={0.55} beamStrength={10} steer={steer} api={dust} />
       </div>
